@@ -1,0 +1,32 @@
+﻿@model EmploymentShiftManager.Models.Employee
+@{
+    ViewData["Title"] = "Thông Tin Cá Nhân";
+    var cardColor = User.IsInRole("Admin") ? "primary" : "success";
+}
+
+<div class="container mt-4">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow border-@cardColor">
+        <div class="card-header bg-@cardColor text-white">
+            <h4 class="mb-0"><i class="bi bi-person-circle"></i> Thông Tin Cá Nhân</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>Họ và tên:</strong> @Model.Name</p>
+            <p><strong>Chức vụ:</strong> @Model.Position</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Số điện thoại:</strong> @Model.Phone</p>
+        </div>
+        <div class="card-footer text-end">
+            <a asp-action="EditProfile" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Chỉnh Sửa
+            </a>
+        </div>
+    </div>
+</div>

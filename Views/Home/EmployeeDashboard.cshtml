@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Trang Nhân Viên";
+}
+
+<div class="dashboard-container-employee text-white text-center">
+    <div class="overlay">
+        <h2 class="fw-bold mb-5 animated-text">Bảng Điều Khiển Nhân Viên</h2>
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-5">
+                <div class="card dashboard-card shadow p-4">
+                    <i class="bi bi-calendar-week-fill text-info display-3"></i>
+                    <h4 class="mt-3">Lịch Làm Việc</h4>
+                    <a asp-controller="Calendar" asp-action="Index" class="btn btn-info mt-3">Xem Lịch</a>
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="card dashboard-card shadow p-4">
+                    <i class="bi bi-clock-fill text-primary display-3"></i>
+                    <h4 class="mt-3">Ca Trực</h4>
+                    <a asp-controller="Calendar" asp-action="Index" class="btn btn-primary mt-3">Xem Ca</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-container-employee {
+        min-height: 100vh;
+        background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('/images/employee-bg.jpg') center/cover no-repeat;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .dashboard-card {
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+    .animated-text {
+        animation: fadeInUp 1.5s ease-out;
+    }
+</style>

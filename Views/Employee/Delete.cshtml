@@ -1,0 +1,22 @@
+﻿@model EmploymentShiftManager.Models.Employee
+@{
+    ViewData["Title"] = "Xóa nhân viên";
+}
+
+<div class="container mt-4">
+    <h3>Bạn có chắc chắn muốn xóa nhân viên này?</h3>
+    <div class="border p-3 mb-3">
+        <p><strong>Họ và tên:</strong> @Model.Name</p>
+        <p><strong>Chức vụ:</strong> @Model.Position</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>SĐT:</strong> @Model.Phone</p>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">
+            <i class="bi bi-trash"></i> Xóa
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<EmploymentShiftManager.Models.Employee>
+@{
+    ViewData["Title"] = "Quản Lý Nhân Viên";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-3">Danh Sách Nhân Viên</h2>
+
+    @if (ViewBag.SuccessMessage != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @ViewBag.SuccessMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <a asp-action="Create" class="btn btn-primary mb-3">
+        <i class="bi bi-plus-circle"></i> Thêm Nhân Viên
+    </a>
+
+    <table class="table table-bordered table-hover text-center align-middle shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Tên</th>
+                <th>Chức vụ</th>
+                <th>Email</th>
+                <th>Số điện thoại</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@emp.Name</td>
+                    <td>@emp.Position</td>
+                    <td>@emp.Email</td>
+                    <td>@emp.Phone</td>
+                    <td>
+                        @if (emp.IsActive)
+                        {
+                            <span class="badge bg-success">Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Inactive</span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@emp.Id" class="btn btn-warning btn-sm">
+                            <i class="bi bi-pencil"></i> Sửa
+                        </a>
+
+                        <form asp-action="ToggleActive" method="post" style="display:inline">
+                            <input type="hidden" name="id" value="@emp.Id" />
+                            @if (emp.IsActive)
+                            {
+                                <button type="submit" class="btn btn-outline-warning btn-sm">
+                                    <i class="bi bi-x-circle"></i> Vô hiệu hóa
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-outline-success btn-sm">
+                                    <i class="bi bi-check-circle"></i> Kích hoạt
+                                </button>
+                            }
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

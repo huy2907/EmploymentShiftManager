@@ -1,0 +1,41 @@
+﻿@model EmploymentShiftManager.Models.Employee
+@{
+    ViewData["Title"] = "Chỉnh Sửa Thông Tin";
+    var cardColor = User.IsInRole("Admin") ? "primary" : "success";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-@cardColor">
+        <div class="card-header bg-@cardColor text-white">
+            <h4 class="mb-0"><i class="bi bi-pencil-square"></i> Chỉnh Sửa Thông Tin</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="EditProfile" method="post">
+                <!-- Hidden ID và Email để update chính xác -->
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="Email" />
+
+                <div class="mb-3">
+                    <label class="form-label">Họ và tên</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Chức vụ</label>
+                    <input asp-for="Position" class="form-control" />
+                    <span asp-validation-for="Position" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Số điện thoại</label>
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+
+                <button type="submit" class="btn btn-success">Lưu</button>
+                <a asp-action="Profile" class="btn btn-secondary">Hủy</a>
+            </form>
+        </div>
+    </div>
+</div>

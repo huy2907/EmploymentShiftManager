@@ -1,0 +1,136 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+@{
+    var navbarClass = "navbar-dark bg-dark";
+    if (User.IsInRole("Admin"))
+    {
+        navbarClass = "navbar-dark bg-primary"; // Admin xanh dương
+    }
+    else if (User.IsInRole("NhanVien"))
+    {
+        navbarClass = "navbar-dark bg-success"; // Nhân viên xanh lá
+    }
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] - Quản lý Lịch Làm Việc & Ca Trực</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet" />
+    <style>
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 6px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-logout {
+            color: white;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 6px;
+            padding: 5px 12px;
+            transition: background-color 0.3s ease;
+        }
+
+            .btn-logout:hover {
+                background-color: rgba(255,255,255,0.4);
+            }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg @navbarClass shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-house-door"></i> Trang Chủ
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="mainNav">
+                <ul class="navbar-nav me-auto">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Calendar" asp-action="Index">
+                                    <i class="bi bi-calendar-event"></i> Lịch Làm Việc
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Employee" asp-action="Index">
+                                    <i class="bi bi-people"></i> Quản Lý Nhân Viên
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Report" asp-action="Index">Xuất Báo Cáo</a>
+                            </li>
+
+                        }
+                        else if (User.IsInRole("NhanVien"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Calendar" asp-action="Index">
+                                    <i class="bi bi-calendar-week"></i> Lịch Làm Việc
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Calendar" asp-action="Index">
+                                    <i class="bi bi-clock"></i> Ca Trực
+                                </a>
+                            </li>
+                        }
+
+                        <!-- Thông tin cá nhân -->
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Account" asp-action="Profile">
+                                <i class="bi bi-person-circle"></i> Thông Tin Cá Nhân
+                            </a>
+                        </li>
+                    }
+                </ul>
+
+                <ul class="navbar-nav">
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item">
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button type="submit" class="btn-logout ms-2">
+                                    <i class="bi bi-box-arrow-right"></i> Đăng Xuất
+                                </button>
+                            </form>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light ms-2" asp-controller="Account" asp-action="Login">
+                                <i class="bi bi-box-arrow-in-right"></i> Đăng Nhập
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light ms-2" asp-controller="Account" asp-action="Register">
+                                <i class="bi bi-person-plus"></i> Đăng Ký
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        @RenderBody()
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

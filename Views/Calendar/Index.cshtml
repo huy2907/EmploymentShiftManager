@@ -1,0 +1,131 @@
+﻿@{
+    ViewData["Title"] = "Lịch Làm Việc";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container mt-4">
+    <h3 class="mb-3 text-center">📅 Lịch Làm Việc & Ca Trực</h3>
+    <div id="calendar"></div>
+</div>
+
+<!-- Modal thêm/sửa ca -->
+<div class="modal fade" id="shiftModal" tabindex="-1" aria-labelledby="shiftModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="shiftForm">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="shiftModalLabel">Thông Tin Ca Trực</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="shiftId" />
+                    <div class="mb-3">
+                        <label class="form-label">Tên ca trực</label>
+                        <input type="text" class="form-control" id="shiftTitle" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mô tả</label>
+                        <textarea class="form-control" id="shiftDesc" rows="2"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Bắt đầu</label>
+                        <input type="datetime-local" class="form-control" id="shiftStart" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Kết thúc</label>
+                        <input type="datetime-local" class="form-control" id="shiftEnd" required />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnDelete" class="btn btn-danger">Xóa</button>
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            selectable: true,
+            editable: true,
+            locale: 'vi',
+
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+
+            events: '/Calendar/GetShifts',
+
+            select: function (info) {
+                document.getElementById('shiftId').value = '';
+                document.getElementById('shiftTitle').value = '';
+                document.getElementById('shiftDesc').value = '';
+                document.getElementById('shiftStart').value = info.startStr.slice(0, 16);
+                document.getElementById('shiftEnd').value = info.endStr ? info.endStr.slice(0, 16) : '';
+
+                var modal = new bootstrap.Modal(document.getElementById('shiftModal'));
+                modal.show();
+            },
+
+            eventClick: function (info) {
+                document.getElementById('shiftId').value = info.event.id;
+                document.getElementById('shiftTitle').value = info.event.title;
+                document.getElementById('shiftDesc').value = info.event.extendedProps.description || '';
+                document.getElementById('shiftStart').value = info.event.start.toISOString().slice(0, 16);
+                document.getElementById('shiftEnd').value = info.event.end ? info.event.end.toISOString().slice(0, 16) : '';
+
+                var modal = new bootstrap.Modal(document.getElementById('shiftModal'));
+                modal.show();
+            }
+        });
+
+        calendar.render();
+
+        // Lưu (Thêm hoặc Cập nhật)
+        document.getElementById('shiftForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            var shiftId = document.getElementById('shiftId').value;
+            var shift = {
+                Id: shiftId ? parseInt(shiftId) : 0,
+                Title: document.getElementById('shiftTitle').value,
+                Description: document.getElementById('shiftDesc').value,
+                Start: document.getElementById('shiftStart').value,
+                End: document.getElementById('shiftEnd').value
+            };
+
+            var url = shiftId ? '/Calendar/UpdateShift' : '/Calendar/AddShift';
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(shift)
+            }).then(() => {
+                bootstrap.Modal.getInstance(document.getElementById('shiftModal')).hide();
+                calendar.refetchEvents();
+            });
+        });
+
+        // Xóa ca
+        document.getElementById('btnDelete').addEventListener('click', function () {
+            var shiftId = document.getElementById('shiftId').value;
+            if (shiftId && confirm('Bạn có chắc chắn muốn xóa ca trực này?')) {
+                fetch('/Calendar/DeleteShift?id=' + shiftId, {
+                    method: 'POST'
+                }).then(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('shiftModal')).hide();
+                    calendar.refetchEvents();
+                });
+            }
+        });
+    });
+</script>

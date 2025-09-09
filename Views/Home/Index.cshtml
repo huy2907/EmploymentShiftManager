@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Trang Chủ";
+}
+
+<div class="home-container text-center text-white d-flex flex-column justify-content-center align-items-center">
+    <h1 class="fw-bold display-4 animated-text mb-3">
+        Hệ Thống Quản Lý Lịch Làm Việc & Ca Trực
+    </h1>
+    <p class="lead mb-4 animated-subtext">
+        Giải pháp hiện đại giúp quản lý ca trực, lịch làm việc và nhân sự hiệu quả, tiết kiệm thời gian.
+    </p>
+    
+    <div class="mt-4">
+        <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg me-2 shadow">
+            <i class="bi bi-box-arrow-in-right"></i> Đăng Nhập
+        </a>
+        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-light btn-lg shadow">
+            <i class="bi bi-person-plus"></i> Đăng Ký
+        </a>
+    </div>
+</div>
+
+<style>
+    /* Background gradient + ảnh nền */
+    .home-container {
+        height: 100vh;
+        background: linear-gradient(-45deg, rgba(78,84,200,0.8), rgba(143,148,251,0.8), rgba(86,204,242,0.8), rgba(47,128,237,0.8)), 
+                    url('/images/background-office.jpg') center/cover no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+        animation: gradientBG 10s ease infinite;
+    }
+
+    @@keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    /* Animation text */
+    .animated-text {
+        animation: fadeInUp 1.5s ease-out;
+        text-shadow: 1px 1px 4px rgba(0,0,0,0.6);
+    }
+
+    .animated-subtext {
+        animation: fadeInUp 2s ease-out;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+
+    @@keyframes fadeInUp {
+        0% { opacity: 0; transform: translateY(30px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+</style>
